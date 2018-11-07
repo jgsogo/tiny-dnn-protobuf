@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package tiny_dnn;
+
+message VecT {
+    repeated float values = 1;
+}

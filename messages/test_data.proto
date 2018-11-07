@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package tiny_dnn;
+
+import "vec_t.proto";
+
+message TestData {
+    repeated VecT test_data = 1;
+    repeated VecT output_data = 2;
+}

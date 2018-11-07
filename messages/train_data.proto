@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package tiny_dnn;
+
+import "vec_t.proto";
+
+message TrainData {
+    enum OptimizerAlgorithm {
+        gradient_descent = 0;
+        RMSprop = 1;
+        adam = 2;
+      }
+
+    enum ProblemType {
+        fit = 0;
+        classification = 1;
+    }
+
+    int32 batch_size = 1;
+    int32 epochs = 2;
+    OptimizerAlgorithm optimizer_algorithm = 3;
+    ProblemType problem_type = 4;
+
+    repeated VecT input_data = 5;
+    repeated VecT desired_data = 6;
+}

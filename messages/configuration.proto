@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package tiny_dnn;
+
+message Configuration {
+    message Layer {
+        string type = 1;
+        int32 n_inputs = 2;
+        int32 n_output = 3;
+        string activation = 4;
+    }
+
+    string id = 1;
+    repeated Layer layers = 2;
+
+}
