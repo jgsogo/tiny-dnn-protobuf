@@ -19,6 +19,10 @@ struct ProtoSerialized : public SerializedData
         free(data);
     }
 
+    T parse() const {
+        return ProtoSerialized::parse(*this);
+    }
+    
     static T parse(const SerializedData& data) {
         T t; t.ParseFromArray(data.data, data.size);
         return t;
