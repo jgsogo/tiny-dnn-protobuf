@@ -57,8 +57,8 @@ int main() {
                 std::cerr << "ERROR: " << status.error_message() << std::endl;
             }
         };
-        auto wrapper = make_wrapper(callback_train);
-        network_train(wrapper.second, network, Serialized<tiny_dnn::TrainData>(train_data), wrapper.first);
+        auto [callback, state] = make_wrapper(callback_train);
+        network_train(state, network, Serialized<tiny_dnn::TrainData>(train_data), callback);
     }
     
     // Test it
@@ -80,8 +80,8 @@ int main() {
                 std::cerr << "ERROR: " << status.error_message() << std::endl;
             }
         };
-        auto wrapper = make_wrapper(callback_test);
-        network_test(wrapper.second, network, Serialized<tiny_dnn::TestData>(test_data), wrapper.first);
+        auto [callback, state] = make_wrapper(callback_test);
+        network_test(state, network, Serialized<tiny_dnn::TestData>(test_data), callback);
     }
     network_destroy(network);
 }
