@@ -5,16 +5,16 @@
 
 
 template <typename T>
-struct Serialized : public SerializedData
+struct ProtoSerialized : public SerializedData
 {
-    Serialized(const T& t)
+    ProtoSerialized(const T& t)
     {
         size = t.ByteSizeLong();
         data = malloc(size);
         t.SerializeToArray(data, size);
     }
     
-    ~Serialized()
+    ~ProtoSerialized()
     {
         free(data);
     }

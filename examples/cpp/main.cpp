@@ -29,7 +29,7 @@ int main() {
     layer2->set_n_output(1);
     
     // Create the network
-    void* network = network_build(Serialized(configuration));
+    void* network = network_build(ProtoSerialized(configuration));
     
     // Train it
     {
@@ -50,16 +50,16 @@ int main() {
         }
         std::function<void(const SerializedData&, const SerializedData&)> callback_train =
         [](const SerializedData& data, const SerializedData& status_in) {
-            tiny_dnn::Status status = Serialized<tiny_dnn::Status>::parse(status_in);
+            tiny_dnn::Status status = ProtoSerialized<tiny_dnn::Status>::parse(status_in);
             if (status.ok()) {
-                tiny_dnn::TrainData train_data = Serialized<tiny_dnn::TrainData>::parse(data);
+                tiny_dnn::TrainData train_data = ProtoSerialized<tiny_dnn::TrainData>::parse(data);
             }
             else {
                 std::cerr << "ERROR: " << status.error_message() << std::endl;
             }
         };
         auto [callback, state] = make_wrapper(callback_train);
-        network_train(state, network, Serialized(train_data), callback);
+        network_train(state, network, ProtoSerialized(train_data), callback);
     }
     
     // Test it
@@ -72,9 +72,9 @@ int main() {
             }
         }
         std::function<void(const SerializedData&, const SerializedData&)> callback_test = [](const SerializedData& data, const SerializedData& status_in) {
-            tiny_dnn::Status status = Serialized<tiny_dnn::Status>::parse(status_in);
+            tiny_dnn::Status status = ProtoSerialized<tiny_dnn::Status>::parse(status_in);
             if (status.ok()) {
-                tiny_dnn::TestData test_data = Serialized<tiny_dnn::TestData>::parse(data);
+                tiny_dnn::TestData test_data = ProtoSerialized<tiny_dnn::TestData>::parse(data);
                 std::cout << test_data.DebugString() << std::endl;
             }
             else {
@@ -82,7 +82,7 @@ int main() {
             }
         };
         auto [callback, state] = make_wrapper(callback_test);
-        network_test(state, network, Serialized(test_data), callback);
+        network_test(state, network, ProtoSerialized(test_data), callback);
     }
     network_destroy(network);
 }

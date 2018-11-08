@@ -112,7 +112,7 @@ void* network_build(const SerializedData& configuration_in) {
     std::cout << "[C++] network_build()" << std::endl;
     network_t* network = nullptr;
     try {
-        tiny_dnn::Configuration config = Serialized<tiny_dnn::Configuration>::parse(configuration_in);
+        tiny_dnn::Configuration config = ProtoSerialized<tiny_dnn::Configuration>::parse(configuration_in);
         std::cout << config.DebugString() << std::endl << std::endl;
         network = new network_t();
 
@@ -139,7 +139,7 @@ void network_destroy(void* handler) {
 void network_train(void* state, void* network_in, const SerializedData& train_data_in, callback_t train_callback) {
     std::cout << "[C++] network_train()" << std::endl;
     network_t* network = static_cast<network_t*>(network_in);
-    tiny_dnn::TrainData train_data = Serialized<tiny_dnn::TrainData>::parse(train_data_in);
+    tiny_dnn::TrainData train_data = ProtoSerialized<tiny_dnn::TrainData>::parse(train_data_in);
 
     std::vector<tiny_cnn::vec_t> input_data;
     std::transform(train_data.input_data().begin(), train_data.input_data().end(),
@@ -164,14 +164,14 @@ void network_train(void* state, void* network_in, const SerializedData& train_da
     
     tiny_dnn::Status status;
     status.set_ok(true);
-    train_callback(state, Serialized<tiny_dnn::TrainData>(train_data), Serialized<tiny_dnn::Status>(status));
+    train_callback(state, ProtoSerialized<tiny_dnn::TrainData>(train_data), ProtoSerialized<tiny_dnn::Status>(status));
     std::cout << "<<< [C++] network_train..." << std::endl;
 }
 
 void network_test(void* state, void* network_in, const SerializedData& test_data_in, callback_t test_callback) {
     std::cout << "[C++] network_test()" << std::endl;
     network_t* network = static_cast<network_t*>(network_in);
-    tiny_dnn::TestData test_data = Serialized<tiny_dnn::TestData>::parse(test_data_in);
+    tiny_dnn::TestData test_data = ProtoSerialized<tiny_dnn::TestData>::parse(test_data_in);
     
     std::vector<tiny_cnn::vec_t> inputs;
     std::transform(test_data.test_data().begin(), test_data.test_data().end(),
@@ -189,6 +189,6 @@ void network_test(void* state, void* network_in, const SerializedData& test_data
 
     tiny_dnn::Status status;
     status.set_ok(true);
-    test_callback(state, Serialized<tiny_dnn::TestData>(test_data), Serialized<tiny_dnn::Status>(status));
+    test_callback(state, ProtoSerialized<tiny_dnn::TestData>(test_data), ProtoSerialized<tiny_dnn::Status>(status));
     std::cout << "<<< [C++] network_test..." << std::endl;
 }
