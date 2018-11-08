@@ -50,6 +50,12 @@ int main() {
         }
         std::function<void(const void*, const void*)> callback_train = [](const void* data, const void* status_in) {
             tiny_dnn::Status status = Serialized<tiny_dnn::Status>::parse(status_in);
+            if (status.ok()) {
+                tiny_dnn::TrainData train_data = Serialized<tiny_dnn::TrainData>::parse(data);
+            }
+            else {
+                std::cerr << "ERROR: " << status.error_message() << std::endl;
+            }
         };
         auto wrapper = make_wrapper(callback_train);
         network_train(wrapper.second, network, Serialized<tiny_dnn::TrainData>(train_data), wrapper.first);
@@ -66,6 +72,13 @@ int main() {
         }
         std::function<void(const void*, const void*)> callback_test = [](const void* data, const void* status_in) {
             tiny_dnn::Status status = Serialized<tiny_dnn::Status>::parse(status_in);
+            if (status.ok()) {
+                tiny_dnn::TestData test_data = Serialized<tiny_dnn::TestData>::parse(data);
+                std::cout << test_data.DebugString() << std::endl;
+            }
+            else {
+                std::cerr << "ERROR: " << status.error_message() << std::endl;
+            }
         };
         auto wrapper = make_wrapper(callback_test);
         network_test(wrapper.second, network, Serialized<tiny_dnn::TestData>(test_data), wrapper.first);

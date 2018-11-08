@@ -23,4 +23,7 @@ message TrainData {
 
     repeated VecT input_data = 5;
     repeated VecT desired_data = 6;
+    
+    //LossMethodology loss_methodology = 7;
+    float loss = 8;
 }

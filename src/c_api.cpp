@@ -155,8 +155,11 @@ void network_train(void* state, void* network_in, const void* train_data_in, cal
     network->fit<tiny_cnn::mse>(opt, input_data, desired_out, train_data.batch_size(), train_data.epochs());
     
     double loss = network->get_loss<tiny_cnn::mse>(input_data, desired_out);
-    std::cout << "mse : " << loss << std::endl;
-    //net.save("xor_net");
+    train_data.set_loss(loss);
+    
+    tiny_dnn::Status status;
+    status.set_ok(true);
+    train_callback(state, Serialized<tiny_dnn::TrainData>(train_data), Serialized<tiny_dnn::Status>(status));
 }
 
 void network_test(void* state, void* network_in, const void* test_data_in, callback_t test_callback) {
@@ -172,6 +175,13 @@ void network_test(void* state, void* network_in, const void* test_data_in, callb
                    });
     for (auto& item: inputs) {
         auto result = network->predict(item);
-        
+        auto test_result = test_data.add_test_data();
+        for (auto& it: result) {
+            test_result->add_values(it);
+        }
     }
+    
+    tiny_dnn::Status status;
+    status.set_ok(true);
+    test_callback(state, Serialized<tiny_dnn::TestData>(test_data), Serialized<tiny_dnn::Status>(status));
 }
