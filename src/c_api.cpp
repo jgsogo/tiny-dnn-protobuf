@@ -103,14 +103,19 @@ namespace {
  using power = tiny_cnn::power_layer;
 
  */
-    
+
+void say_hello() {
+    std::cout << "[C++] Hello!" << std::endl;
+}
 
 void* network_build(const void* configuration_in) {
     std::cout << "[C++] network_build()" << std::endl;
     network_t* network = nullptr;
     try {
         tiny_dnn::Configuration config = Serialized<tiny_dnn::Configuration>::parse(configuration_in);
+        std::cout << config.DebugString() << std::endl << std::endl;
         network = new network_t();
+
         // Build the actual network
         for (auto& layer: config.layers()) {
             add_layer(*network, layer);
@@ -135,7 +140,7 @@ void network_train(void* state, void* network_in, const void* train_data_in, cal
     std::cout << "[C++] network_train()" << std::endl;
     network_t* network = static_cast<network_t*>(network_in);
     tiny_dnn::TrainData train_data = Serialized<tiny_dnn::TrainData>::parse(train_data_in);
-    
+
     std::vector<tiny_cnn::vec_t> input_data;
     std::transform(train_data.input_data().begin(), train_data.input_data().end(),
                    std::back_inserter(input_data),
@@ -160,6 +165,7 @@ void network_train(void* state, void* network_in, const void* train_data_in, cal
     tiny_dnn::Status status;
     status.set_ok(true);
     train_callback(state, Serialized<tiny_dnn::TrainData>(train_data), Serialized<tiny_dnn::Status>(status));
+    std::cout << "<<< [C++] network_train..." << std::endl;
 }
 
 void network_test(void* state, void* network_in, const void* test_data_in, callback_t test_callback) {
@@ -184,4 +190,5 @@ void network_test(void* state, void* network_in, const void* test_data_in, callb
     tiny_dnn::Status status;
     status.set_ok(true);
     test_callback(state, Serialized<tiny_dnn::TestData>(test_data), Serialized<tiny_dnn::Status>(status));
+    std::cout << "<<< [C++] network_test..." << std::endl;
 }

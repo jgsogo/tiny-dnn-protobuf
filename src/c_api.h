@@ -7,6 +7,8 @@
 extern "C" {
     typedef void(*callback_t)(void* state, const void* data, const void* status);
 
+    TINY_DNN_C_EXPORT void say_hello();
+    
     TINY_DNN_C_EXPORT void* network_build(const void* configuration);
     TINY_DNN_C_EXPORT void network_destroy(void* handler);
 
