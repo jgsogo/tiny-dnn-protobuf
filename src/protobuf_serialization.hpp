@@ -1,32 +1,31 @@
 
+#pragma once
+
+#include "c_api.h"
+
 
 template <typename T>
-struct Serialized
+struct ProtoSerialized : public SerializedData
 {
-    void* data;
-    int64_t size;
-    
-    Serialized(const T& t)
+    ProtoSerialized(const T& t)
     {
         size = t.ByteSizeLong();
         data = malloc(size);
         t.SerializeToArray(data, size);
     }
     
-    ~Serialized()
+    ~ProtoSerialized()
     {
         free(data);
     }
-    
-    operator const void*() const
-    {
-        return static_cast<const void*>(this);
+
+    T parse() const {
+        return ProtoSerialized::parse(*this);
     }
     
-    static T parse(const void* handler)
-    {
-        const Serialized* serialized = static_cast<const Serialized*>(handler);
-        T t; t.ParseFromArray(serialized->data, serialized->size);
+    static T parse(const SerializedData& data) {
+        T t; t.ParseFromArray(data.data, data.size);
         return t;
     }
+    
 };

@@ -18,7 +18,7 @@ class Serialized(ctypes.Structure):
         serialized = Serialized()
         serialized.data = ctypes.cast(s, ctypes.c_void_p)
         serialized.size = len(s)
-        return ctypes.byref(serialized)
+        return serialized
 
     def parse(self, proto_class):
         proto = proto_class()
@@ -31,9 +31,6 @@ if __name__ == '__main__':
 
     path_to_dll = r"/Users/jgsogo/dev/projects/tiny-dnn-protobuf/build/lib/libtiny_dnn_c.dylib"
     lib = ctypes.CDLL(path_to_dll)
-
-    # say hello
-    lib.say_hello()
 
     # Configure network
     configuration = Configuration()
@@ -51,7 +48,7 @@ if __name__ == '__main__':
     layer.n_output = 1
 
     network_build = lib.network_build
-    network_build.argtypes = [ctypes.c_void_p]
+    network_build.argtypes = [ctypes.POINTER(Serialized)]
     network_build.restype = ctypes.c_void_p
     h = network_build(Serialized.build(configuration))
 
@@ -72,7 +69,7 @@ if __name__ == '__main__':
     CMPFUNC = ctypes.CFUNCTYPE(ctypes.c_voidp, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p)
     network_train = lib.network_train
     network_train.restype = None
-    network_train.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, CMPFUNC]
+    network_train.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(Serialized), CMPFUNC]
     network_train(None, h, Serialized.build(train_data), CMPFUNC(callback))
 
     # Test the network
@@ -90,7 +87,7 @@ if __name__ == '__main__':
 
     network_test = lib.network_test
     network_test.restype = None
-    network_test.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, CMPFUNC]
+    network_test.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(Serialized), CMPFUNC]
     network_test(None, h, Serialized.build(test_data), CMPFUNC(callback))
 
     # Destroy network
