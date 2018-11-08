@@ -1,11 +1,18 @@
 
+#pragma once
+
+#include "c_api.h"
 
 template <typename T>
-struct Serialized
+T parse(const SerializedData& data) {
+    T t; t.ParseFromArray(data.data, data.size);
+    return t;
+}
+
+
+template <typename T>
+struct Serialized : public SerializedData
 {
-    void* data;
-    int64_t size;
-    
     Serialized(const T& t)
     {
         size = t.ByteSizeLong();
@@ -17,7 +24,7 @@ struct Serialized
     {
         free(data);
     }
-    
+
     operator const void*() const
     {
         return static_cast<const void*>(this);
