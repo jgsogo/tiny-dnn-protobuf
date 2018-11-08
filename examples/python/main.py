@@ -32,9 +32,6 @@ if __name__ == '__main__':
     path_to_dll = r"/Users/jgsogo/dev/projects/tiny-dnn-protobuf/build/lib/libtiny_dnn_c.dylib"
     lib = ctypes.CDLL(path_to_dll)
 
-    # say hello
-    lib.say_hello()
-
     # Configure network
     configuration = Configuration()
     configuration.id = "Id of configuration!"

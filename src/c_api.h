@@ -13,8 +13,6 @@ extern "C" {
 
     typedef void(*callback_t)(void* state, const SerializedData& data, const SerializedData& status);
 
-    TINY_DNN_C_EXPORT void say_hello();
-    
     TINY_DNN_C_EXPORT void* network_build(const SerializedData& configuration);
     TINY_DNN_C_EXPORT void network_destroy(void* handler);
 

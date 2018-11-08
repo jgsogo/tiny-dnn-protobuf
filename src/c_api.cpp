@@ -104,10 +104,6 @@ namespace {
 
  */
 
-void say_hello() {
-    std::cout << "[C++] Hello!" << std::endl;
-}
-
 void* network_build(const SerializedData& configuration_in) {
     std::cout << "[C++] network_build()" << std::endl;
     network_t* network = nullptr;
