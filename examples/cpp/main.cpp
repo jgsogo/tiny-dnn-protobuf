@@ -50,9 +50,9 @@ int main() {
         }
         std::function<void(const SerializedData&, const SerializedData&)> callback_train =
         [](const SerializedData& data, const SerializedData& status_in) {
-            tiny_dnn::Status status = parse<tiny_dnn::Status>(status_in);
+            tiny_dnn::Status status = Serialized<tiny_dnn::Status>::parse(status_in);
             if (status.ok()) {
-                tiny_dnn::TrainData train_data = parse<tiny_dnn::TrainData>(data);
+                tiny_dnn::TrainData train_data = Serialized<tiny_dnn::TrainData>::parse(data);
             }
             else {
                 std::cerr << "ERROR: " << status.error_message() << std::endl;
@@ -72,9 +72,9 @@ int main() {
             }
         }
         std::function<void(const SerializedData&, const SerializedData&)> callback_test = [](const SerializedData& data, const SerializedData& status_in) {
-            tiny_dnn::Status status = parse<tiny_dnn::Status>(status_in);
+            tiny_dnn::Status status = Serialized<tiny_dnn::Status>::parse(status_in);
             if (status.ok()) {
-                tiny_dnn::TestData test_data = parse<tiny_dnn::TestData>(data);
+                tiny_dnn::TestData test_data = Serialized<tiny_dnn::TestData>::parse(data);
                 std::cout << test_data.DebugString() << std::endl;
             }
             else {
