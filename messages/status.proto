@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package tiny_dnn;
+
+message Status {
+  bool ok = 1;
+  uint32 error_code = 2;
+  string error_message = 3;
+}
